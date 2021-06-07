@@ -1,23 +1,15 @@
-const axios = require('axios').default;
+import axios from 'axios';
 
-export function apiQuery(city) {
-  const key = `72a8e0566e40b16f5aa65595512e9983`;
-  const urlToGetCoords = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${key}`;
+const key = `72a8e0566e40b16f5aa65595512e9983`;
 
-  return new Promise((resolve, reject) => {
-    axios
-    .get(urlToGetCoords)
-    .then((response) => {
-      const {lon, lat} = response.data.coord;
-      const urlToGetForecast = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=${key}`;
-      axios
-      .get(urlToGetForecast)
-      .then((response) => {
-          resolve(response);
-        });
-      })
-    .catch((e) => {
-      reject('invalid city')
-    });
-  })
+const instance = axios.create({
+  baseURL: "https://api.openweathermap.org/data/2.5/"
+});
+
+export async function apiQuery(city) {
+  const urlToGetCoords = `/weather?q=${city}&appid=${key}`;
+  const {lon, lat} = (await instance.get(urlToGetCoords)).data.coord;
+  const urlToGetForecast = `/onecall?lat=${lat}&lon=${lon}&units=metric&appid=${key}`;
+
+  return await instance.get(urlToGetForecast);
 }

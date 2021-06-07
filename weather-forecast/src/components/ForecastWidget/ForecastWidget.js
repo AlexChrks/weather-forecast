@@ -12,12 +12,14 @@ function ForecastWidget() {
 
   const store = useSelector((state) => state);
 
+  const { weekForecast, cityError } = store;
+
   return (
     <div className={styles.wrapper}>
       <SearchBar />
       <h3 className={styles.logo}>Forecast App</h3>
-      { store.weekForecast && <Chart /> }
-      { store.cityError && <ErrorNotification /> }
+      { weekForecast && <Chart /> }
+      { cityError && <ErrorNotification /> }
     </div>
   );
 }
